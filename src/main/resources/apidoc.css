@@ -1,0 +1,49 @@
+.list-group-item:first-child, .list-group-item:last-child {
+	border-radius: 0px;
+	border-radius: 0px;
+}
+
+.list-group-item {
+	padding: 5px 15px;
+}
+
+.list-group>.list-group {
+	margin-bottom: 0px;
+}
+
+.list-group>.list-group>.list-group-item:last-child {
+	border-bottom: 0px;
+}
+
+.list-group:first-child {
+	border-bottom: 1px solid #ddd;
+}
+
+table>tr>td:first-child {
+	font-weight: bold
+}
+
+.gray {
+	background-color: #f9f9f9;
+}
+
+.pull-right {
+	margin-left: 5px;
+}
+
+.badge {
+	padding: 3px 7px;
+	color: #fff;
+	background-color: #337ab7;
+}
+
+hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.well {
+	min-height: 5px;
+	padding: 10px;
+	margin-bottom: 5px;
+}
