@@ -20,7 +20,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.di.apidoc.bean.Apidoc;
 import com.di.apidoc.bean.Apidoc.Menu.Item.Param;
 import com.di.apidoc.bean.Apidoc.Menu.Item.Type;
-import com.di.apidoc.util.InterfaceUtil;
 import com.di.apidoc.util.MappingUtil;
 import com.di.apidoc.util.ResourceUtil;
 import com.di.kit.ClassUtil;
@@ -74,7 +73,7 @@ public class ApidocController {
 		List<Class> cs = new ArrayList<>();
 		List<Apidoc.Menu> menus = new ArrayList<>();
 		for (String path : doc.getPackagePath()) {
-			List<Class<?>> classList = InterfaceUtil.getinterfaces(path);
+			List<Class<?>> classList = com.di.apidoc.util.ClassUtil.getClassList(path, false, null);
 			if (!doc.isSubPackagable()) {
 				for (int i = 0; i < classList.size(); i++) {
 					if (!classList.get(i).getPackage().getName().equals(path))

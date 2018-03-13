@@ -17,6 +17,8 @@ public class ParameterUtil {
 	static ObjectMapper objectMapper = new ObjectMapper();
 
 	public static Object getValue(Parameter p, String v) throws JsonMappingException, IOException {
+		if(v==null||v.isEmpty())
+			return null;
 		if (p.getType() == byte.class || p.getType() == Byte.class) {
 			return Byte.valueOf(v).byteValue();
 		} else if (p.getType() == short.class || p.getType() == Short.class) {
