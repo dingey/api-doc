@@ -21,7 +21,6 @@ public class ClassUtil {
 		List<Class<?>> classList = new ArrayList<Class<?>>();
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		try {
-			// 按文件的形式去查找
 			String strFile = pkgName.replaceAll("\\.", "/");
 			Enumeration<URL> urls = loader.getResources(strFile);
 			while (urls.hasMoreElements()) {
@@ -42,7 +41,6 @@ public class ClassUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return classList;
 	}
 
@@ -51,7 +49,7 @@ public class ClassUtil {
 		if (clazzList == null) {
 			return;
 		}
-		File[] files = filterClassFiles(pkgPath);// 过滤出.class文件及文件夹
+		File[] files = filterClassFiles(pkgPath);
 		System.out.println("files:" + ((files == null) ? "null" : "length=" + files.length));
 		if (files != null) {
 			for (File f : files) {
@@ -61,9 +59,7 @@ public class ClassUtil {
 					String clazzName = getClassName(pkgName, fileName);
 					addClassName(clazzList, clazzName, annotation);
 				} else {
-					// 文件夹的情况
 					if (isRecursive) {
-						// 需要继续查找该文件夹/包名下的类
 						String subPkgName = pkgName + "." + fileName;
 						String subPkgPath = pkgPath + "/" + fileName;
 						findClassName(clazzList, subPkgName, subPkgPath, true, annotation);
@@ -73,11 +69,6 @@ public class ClassUtil {
 		}
 	}
 
-	/**
-	 * 第三方Jar类库的引用。<br/>
-	 * 
-	 * @throws IOException
-	 */
 	public static void findClassName(List<Class<?>> clazzList, String pkgName, URL url, boolean isRecursive,
 			Class<? extends Annotation> annotation) throws IOException {
 		JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
@@ -104,7 +95,6 @@ public class ClassUtil {
 					System.out.println("jar entryName:" + jarEntryName);
 					addClassName(clazzList, clazzName, annotation);
 				} else if (isRecursive && prefix.startsWith(pkgName)) {
-					// 遍历子包名：子类
 					System.out.println("jar entryName:" + jarEntryName + " isRecursive:" + isRecursive);
 					addClassName(clazzList, clazzName, annotation);
 				}
@@ -116,7 +106,6 @@ public class ClassUtil {
 		if (pkgPath == null) {
 			return null;
 		}
-		// 接收 .class 文件 或 类文件夹
 		return new File(pkgPath).listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
