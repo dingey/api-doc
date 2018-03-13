@@ -8,13 +8,21 @@ function repaintMenu() {
 		//$("#menu").empty();
 		menuData=data;
 		for(var i=0;i<data.length;i++){
+			var n=data[i].name;
+			if(n.length>24){
+				n=n.substring(0,20)+"...";
+			}
 			var t="<a href=\"#\" class=\"list-group-item\" menuindex='"+i+"'>";
-                t+="   <span class=\"glyphicon glyphicon-plus\">"+data[i].name+"</span><span class=\"badge\">"+data[i].items.length+"</span>";
+                t+="   <span class=\"glyphicon glyphicon-plus\">"+n+"</span><span class=\"badge\">"+data[i].items.length+"</span>";
                 t+="</a>";
                 t+="<div class=\"list-group hide\">";
                 if(data[i].items.length>0){
                 	for(var j=0;j<data[i].items.length;j++){
-                		t+="<button class=\"list-group-item\" menuindex='"+i+"' itemsindex='"+j+"'>"+data[i].items[j].name+"</button>";
+                        var m=data[i].items[j].name;
+                        if(m.length>20){
+                            m=m.substring(0,20)+"...";
+                        }
+                		t+="<button class=\"list-group-item\" menuindex='"+i+"' itemsindex='"+j+"'>"+m+"</button>";
                 	}
                 }
                 t+="</div>";

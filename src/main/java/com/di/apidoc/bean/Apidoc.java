@@ -1,9 +1,15 @@
 package com.di.apidoc.bean;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+
+import com.di.kit.StringUtil;
 
 /**
  * @author d
@@ -20,11 +26,28 @@ public class Apidoc implements Serializable {
 	// 限制是否递归子包下的文件
 	private boolean subPackagable = false;
 
+	private HashMap<String, HashSet<Method>> method = new HashMap<>();
+
 	public Apidoc() {
 	}
 
 	public Apidoc(String packagePath) {
 		this.getPackagePath().add(packagePath);
+	}
+
+	public Apidoc putMethod(Method m) {
+		String beanName = StringUtil.firstCharLower(m.getDeclaringClass().getSimpleName());
+		HashSet<Method> set = method.get(beanName);
+		if (set == null) {
+			set = new HashSet<>();
+			set.add(m);
+			method.put(beanName, set);
+		}
+		return this;
+	}
+
+	public HashSet<Method> getMethod(String beanName) {
+		return method.get(beanName);
 	}
 
 	public boolean isSubPackagable() {
