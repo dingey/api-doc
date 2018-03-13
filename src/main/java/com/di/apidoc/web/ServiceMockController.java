@@ -20,12 +20,11 @@ public class ServiceMockController implements ApplicationContextAware {
 	private HashMap<Class<?>, Method[]> map = new HashMap<>();
 
 	@PostMapping(path = "/api-doc/service")
-	public Object invoke(Request request) throws ClassNotFoundException {
+	public Object invoke(Request request) {
 		return invoke(request.getBeanName(), request.getMethodName(), request.debug, request.getParams());
 	}
 
-	public <T> Object invoke(String beanName, String methodName, boolean debug, String... params)
-			throws ClassNotFoundException {
+	public <T> Object invoke(String beanName, String methodName, boolean debug, String... params) {
 		Object serviceClass = applicationContext.getBean(beanName);
 		if (serviceClass == null)
 			return Response.fail("找不到" + beanName);
@@ -48,7 +47,7 @@ public class ServiceMockController implements ApplicationContextAware {
 				}
 				try {
 					return Response.success(method.invoke(serviceClass, args));
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					Response fail = Response.fail("执行dubbo方法" + methodName + "异常:" + e.getMessage());
 					if (debug)
 						fail.stackTrace(e);
@@ -133,7 +132,7 @@ public class ServiceMockController implements ApplicationContextAware {
 			return this;
 		}
 
-		public Response stackTrace(Exception e) {
+		public Response stackTrace(Throwable e) {
 			StringBuilder s = new StringBuilder();
 			for (StackTraceElement ste : e.getStackTrace()) {
 				s.append(ste.getClassName() + "." + ste.getMethodName() + "(" + ste.getLineNumber() + ")\r\n");
