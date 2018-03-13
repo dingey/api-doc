@@ -76,6 +76,19 @@ function initMenu() {
 			}else{
 				tr+="</td><td><textarea rows='1' name='params["+i+"]'>"+(p.defaultValue==null?"":p.defaultValue)+"</textarea></td><td>"+p.desc+"</td>";				
 			}
+			if(p.type=="CLASS"){
+				tr+="<td>对象json格式</td>";									
+			}else if(p.type=="STRING"){
+				tr+="<td>字符串</td>";		
+			}else if(p.type=="NUM"){
+				tr+="<td>整形</td>";		
+			}else if(p.type=="DATE"){
+				tr+="<td>时间yyyy-MM-dd HH:mm:ss</td>";		
+			}else if(p.type=="ARRAY"){
+				tr+="<td>数组json格式</td>";		
+			}else if(p.type=="LIST"){
+				tr+="<td>数组json格式</td>";		
+			}
 			$("#reqtbody").append(tr);
 		}
 		$("#resdesc").empty().html("<a class='btn' onclick='showc(\""+item.rc+"\")'>"+item.rdesc+"</a>");
