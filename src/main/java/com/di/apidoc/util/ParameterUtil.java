@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ParameterUtil {
 	static ObjectMapper objectMapper = new ObjectMapper();
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Object getValue(Parameter p, String v) throws JsonMappingException, IOException {
-		if(v==null||v.isEmpty())
+		if (v == null || v.isEmpty())
 			return null;
 		if (p.getType() == byte.class || p.getType() == Byte.class) {
 			return Byte.valueOf(v).byteValue();
@@ -50,6 +51,10 @@ public class ParameterUtil {
 			}
 		} else if (p.getType() == String.class) {
 			return v;
+		} else if (p.getType().isEnum()) {
+			Class<?> type = p.getType();
+			Class<? extends Enum> e = (Class<? extends Enum>) type;
+			return Enum.valueOf(e, v);
 		} else if ((p.getType() instanceof Object) && p.getType() != Object.class && p.getType() != Class.class) {
 			return fromJson(v, p.getType());
 		}
