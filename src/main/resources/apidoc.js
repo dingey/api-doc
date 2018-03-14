@@ -88,6 +88,8 @@ function initMenu() {
 				tr+="<td>数组json格式</td>";		
 			}else if(p.type=="LIST"){
 				tr+="<td>数组json格式</td>";		
+			}else if(p.type=="ENUM"){
+				tr+="<td>枚举</td>";		
 			}
 			$("#reqtbody").append(tr);
 		}
