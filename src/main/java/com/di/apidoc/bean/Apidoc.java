@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import com.di.kit.StringUtil;
@@ -27,7 +26,7 @@ public class Apidoc implements Serializable {
 	// 限制是否递归子包下的文件
 	private boolean subPackagable = false;
 
-	private HashMap<String, HashSet<Method>> method = new HashMap<>();
+	private HashMap<String, HashMap<String, Method>> method = new HashMap<>();
 
 	public Apidoc() {
 	}
@@ -38,21 +37,20 @@ public class Apidoc implements Serializable {
 
 	public Apidoc putMethod(Method m) {
 		String beanName = StringUtil.firstCharLower(m.getDeclaringClass().getSimpleName());
-		HashSet<Method> set = method.get(beanName);
-		if (set == null) {
-			set = new HashSet<>();
-			set.add(m);
-			method.put(beanName, set);
+		HashMap<String, Method> map = method.get(beanName);
+		if (map == null) {
+			map = new HashMap<>();
+			map.put(m.getName() + "-" + m.getParameterCount(), m);
+			method.put(beanName, map);
+		} else {
+			map.put(m.getName() + "-" + m.getParameterCount(), m);
 		}
 		return this;
 	}
 
 	public Method getMethod(String beanName, Method m) {
-		for (Method me : method.get(beanName)) {
-			if (me.getName().equals(m.getName()) && me.getParameterCount() == m.getParameterCount())
-				return me;
-		}
-		return null;
+		HashMap<String, Method> map = method.get(beanName);
+		return map == null ? null : map.get(m.getName() + "-" + m.getParameterCount());
 	}
 
 	public boolean isSubPackagable() {
