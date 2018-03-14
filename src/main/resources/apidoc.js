@@ -210,14 +210,14 @@ function send(){
 			$("#progress>div").addClass("progress-bar-danger");	
 		}
 		$("#status").html(jqXHR.status);
-		$("#resbody").text(JSON.stringify(data.data));
+		$("#resbody").val(JSON.stringify(data.data));
 	},"json").done(function(){
 		$("#progress>div").removeClass("active");
 	}).fail(function(data){
 		$("#progress>div").removeClass("active");
 		$("#progress>div").removeClass("progress-bar-info").removeClass("progress-bar-success").addClass("progress-bar-danger");
 		$("#status").html(data.status);
-		$("#resbody").text(data.responseText);
+		$("#resbody").val(data.responseText);
 	});
 }
 function togmenu(){
