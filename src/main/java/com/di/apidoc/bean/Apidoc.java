@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +47,12 @@ public class Apidoc implements Serializable {
 		return this;
 	}
 
-	public HashSet<Method> getMethod(String beanName) {
-		return method.get(beanName);
+	public Method getMethod(String beanName, Method m) {
+		for (Method me : method.get(beanName)) {
+			if (me.getName().equals(m.getName()) && me.getParameterCount() == m.getParameterCount())
+				return me;
+		}
+		return null;
 	}
 
 	public boolean isSubPackagable() {
@@ -234,8 +240,6 @@ public class Apidoc implements Serializable {
 				public static String getType(Class<?> typec) {
 					if (typec.isEnum()) {
 						return ENUM.name();
-					} else if (typec.isInterface()) {
-						return INTERFACE.name();
 					} else if (typec == String.class) {
 						return STRING.name();
 					} else if (typec == byte.class || typec == Byte.class || typec == short.class
@@ -243,6 +247,14 @@ public class Apidoc implements Serializable {
 							|| typec == long.class || typec == Long.class || typec == double.class
 							|| typec == Double.class || typec == float.class || typec == Float.class) {
 						return NUM.name();
+					} else if (typec == Date.class) {
+						return DATE.name();
+					} else if (typec.isArray()) {
+						return ARRAY.name();
+					} else if (typec == List.class || typec == ArrayList.class || typec == Collection.class) {
+						return LIST.name();
+					} else if (typec.isInterface()) {
+						return INTERFACE.name();
 					}
 					return CLASS.name();
 				}

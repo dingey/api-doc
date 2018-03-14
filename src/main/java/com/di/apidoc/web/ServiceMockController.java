@@ -4,11 +4,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.di.apidoc.bean.Apidoc;
 import com.di.apidoc.util.ParameterUtil;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -18,6 +20,8 @@ import java.util.HashMap;
 public class ServiceMockController implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 	private HashMap<Class<?>, Method[]> map = new HashMap<>();
+	@Autowired
+	private Apidoc apidoc;
 
 	@PostMapping(path = "/api-doc/service")
 	public Object invoke(Request request) {
@@ -32,9 +36,10 @@ public class ServiceMockController implements ApplicationContextAware {
 		for (Method method : declaredMethods) {
 			if (method.getName().equals(methodName) && ((params == null && method.getParameterCount() == 0)
 					|| (params != null && method.getParameterCount() == params.length))) {
+				Method iMethod = apidoc.getMethod(beanName, method);
 				Object[] args = new Object[params == null ? 0 : params.length];
 				for (int i = 0; i < method.getParameters().length; i++) {
-					Parameter parameter = method.getParameters()[i];
+					Parameter parameter = iMethod.getParameters()[i];
 					try {
 						args[i] = ParameterUtil.getValue(parameter, params[i]);
 					} catch (Exception e) {

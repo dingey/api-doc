@@ -36,6 +36,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -98,6 +99,7 @@ public class ApidocController {
 				List<Apidoc.Menu.Item> items = new ArrayList<>();
 				for (Method method : c.getDeclaredMethods()) {
 					if (method.isAnnotationPresent(ApiOperation.class) || !doc.isOnlyApiAnnotation()) {
+						doc.putMethod(method);
 						ApiOperation ao = method.getAnnotation(ApiOperation.class);
 						Apidoc.Menu.Item item = new Apidoc.Menu.Item();
 						item.setBeanName(beanName);
@@ -171,8 +173,16 @@ public class ApidocController {
 							item.setRdesc(returnType.getComponentType().getName() + "[]");
 						} else {
 							item.setRtype(Type.CLASS.name());
-							item.setRc(returnType.getName());
-							item.setRdesc(returnType.getSimpleName());
+							java.lang.reflect.Type genericReturnType = method.getGenericReturnType();
+							try {
+								ParameterizedType pt = (ParameterizedType) genericReturnType;
+								java.lang.reflect.Type type = pt.getActualTypeArguments()[0];
+								item.setRc(type.getTypeName());
+								item.setRdesc(returnType.getSimpleName() + "&lt;" + type.getTypeName() + "&gt;");
+							} catch (Throwable e) {
+								item.setRc(returnType.getName());
+								item.setRdesc(returnType.getSimpleName());
+							}
 						}
 						items.add(item);
 					}
@@ -208,7 +218,12 @@ public class ApidocController {
 				p.setName(f.getName());
 				p.setType(Type.getType(f.getType()));
 				p.setC(f.getType().getName());
-				p.setDefaultValue(String.valueOf(f.get(c.newInstance())));
+				Object o = f.get(c.newInstance());
+				if (o instanceof Date) {
+					p.setDefaultValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(o));
+				} else {
+					p.setDefaultValue(String.valueOf(o));
+				}
 				if (f.isAnnotationPresent(ApiModelProperty.class)) {
 					ApiModelProperty amp = f.getAnnotation(ApiModelProperty.class);
 					if (!amp.name().isEmpty())

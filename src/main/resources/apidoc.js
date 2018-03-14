@@ -93,6 +93,7 @@ function initMenu() {
 			}
 			$("#reqtbody").append(tr);
 		}
+		$("#resbody").val("");
 		$("#resdesc").empty().html("<a class='btn' onclick='showc(\""+item.rc+"\")'>"+item.rdesc+"</a>");
 	});
 	$("a.list-group-item").click(function() {
