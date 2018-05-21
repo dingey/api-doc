@@ -63,5 +63,5 @@ public class PetService {
 }
 ```
 在spring service里写swagger的注解，没有接口下直接写在service里面，有接口层下写在接口里面。
-启动项目，访问/api-doc/index即可看到接口列表。
+启动项目，访问/api-doc/index.html即可看到接口列表。
 ![image](https://dingey.github.io/images/apidoc.png)
